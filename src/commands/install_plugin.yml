@@ -1,0 +1,37 @@
+description: >
+  Installs ASDF plugin.
+
+parameters:
+  debug:
+    type: boolean
+    default: false
+    description: "Flag to run the script in debug mode."
+  plugin_name:
+    type: string
+    description: >
+      Plugins name.
+  plugin_url:
+    type: string
+    default: ""
+    description: >
+      The URL where plugin can be found.
+      If not set, it'll install plugin from community list.
+  plugin_tag:
+    type: string
+    default: ""
+    description: >
+      The plugins SHA1.
+  plugin_sha1:
+    type: string
+    default: ""
+    description: >
+      The plugins SHA1.
+
+steps:
+  - run:
+      environment:
+        PARAM_DEBUG: <<parameters.debug>>
+        PARAM_INSTALL_DIR: <<parameters.install_dir>>
+        PARAM_VERSION: <<parameters.version>>
+      name: "asdf/install_plugin"
+      command: <<include(scripts/gen/install_asdf_plugin.bash)>>

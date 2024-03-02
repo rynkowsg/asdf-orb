@@ -56,33 +56,16 @@ release-filters: &release-filters
     only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
 
 jobs:
-  test_install_asdf:
-    executor: <<parameters.executor>>
-    parameters:
-      # parameters copied from install_asdf
-      debug:
-        type: boolean
-        default: false
-        description: "Flag to run the script in debug mode."
-      executor: {type: executor}
-      install_dir:
-        type: string
-        default: ""
-        description: "Destination where to install the tool. ASDF_DIR is set to that value. By defaults takes ~/.asdf."
-      version:
-        type: string
-        default: ""
-        description:
-          Requested version. If not provided it install the latest.
+  lint:
+    executor: docker_x86_cimg
     steps:
+      - asdf/install
       - checkout
-      - rynkowsg-orb/install_asdf:
-          debug: << parameters.debug >>
-          install_dir: << parameters.install_dir >>
-          version: << parameters.version >>
-      - run:
-          name: "test command: asdf"
-          command: asdf --version
+      - run: |
+          pwd
+          ls -al
+          asdf plugin-add circleci-cli https://github.com/ucpr/asdf-circleci-cli.git
+          asdf install
 
   test_install:
     parameters:
@@ -99,6 +82,9 @@ jobs:
 workflows:
   test-deploy:
     jobs:
+      - lint:
+          filters: *filters
+
       - test_install:
           name: test_install, E:<<matrix.executor>>
           debug: false
@@ -115,6 +101,7 @@ workflows:
 
       - orb-tools/pack:
           requires:
+            - lint
             - test_install
           filters: *filters
 
