@@ -1,0 +1,19 @@
+description: |
+  Installs ASDF.
+
+usage:
+  version: 2.1
+
+  orbs:
+    checkout-orb: rynkowsg/asdf-orb@0.1.0
+
+  jobs:
+    test:
+      docker: [{image: "cimg/base:stable"}]
+      steps:
+        - asdf/install
+
+  workflows:
+    main-workflow:
+      jobs:
+        - test

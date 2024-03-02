@@ -1,0 +1,139 @@
+version: 2.1
+
+orbs:
+  # orb under test
+  asdf: {}
+  # changelog: https://github.com/CircleCI-Public/BATS-orb/releases
+  bats: circleci/bats@1.1.0
+  # orb info: https://circleci.com/developer/orbs/orb/circleci/orb-tools
+  # changelog: https://github.com/CircleCI-Public/orb-tools-orb/releases
+  orb-tools: circleci/orb-tools@12.1.0
+
+executors:
+  # Docker:
+  # https://circleci.com/docs/configuration-reference/#docker-execution-environment
+  docker_x86_cimg:
+    docker: [{image: cimg/base:2023.12}]
+    resource_class: small
+  docker_arm_cimg:
+    docker: [{image: cimg/base:2023.12}]
+    resource_class: arm.medium
+  # Linux VM: Ubuntu
+  # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
+  # Android images: https://circleci.com/developer/machine/image/android
+  # Ubuntu images: https://circleci.com/developer/machine/image/ubuntu-2204
+  machine_android:
+    machine: {image: android:2024.01.1}
+    resource_class: medium
+  machine_ubuntu_arm:
+    machine: {image: ubuntu-2204:2024.01.1}
+    resource_class: arm.medium
+  machine_ubuntu_x86:
+    machine: {image: ubuntu-2204:2024.01.1}
+    resource_class: medium
+  # MacOS
+  # https://circleci.com/docs/configuration-reference/#macos-execution-environment
+  # https://circleci.com/developer/machine/image/xcode
+  # From Jun 2024, M1 Medium will be available for free plan.
+  macos_x86:
+    macos: {xcode: 15.1.0}
+    resource_class: macos.x86.medium.gen2
+  # GPU:
+  # GPU and GPU Windows are not available in the Free plan.
+  # More: https://circleci.com/pricing/#comparison-table
+
+# Use this tag to ensure test jobs always run,
+# even though the downstream publish job will only run on release tags.
+filters: &filters
+  tags:
+    only: /.*/
+
+# Filter for release tags.
+release-filters: &release-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /^v[0-9]+\.[0-9]+\.[0-9]+$/
+
+jobs:
+  test_install_asdf:
+    executor: <<parameters.executor>>
+    parameters:
+      # parameters copied from install_asdf
+      debug:
+        type: boolean
+        default: false
+        description: "Flag to run the script in debug mode."
+      executor: {type: executor}
+      install_dir:
+        type: string
+        default: ""
+        description: "Destination where to install the tool. ASDF_DIR is set to that value. By defaults takes ~/.asdf."
+      version:
+        type: string
+        default: ""
+        description:
+          Requested version. If not provided it install the latest.
+    steps:
+      - checkout
+      - rynkowsg-orb/install_asdf:
+          debug: << parameters.debug >>
+          install_dir: << parameters.install_dir >>
+          version: << parameters.version >>
+      - run:
+          name: "test command: asdf"
+          command: asdf --version
+
+  test_install:
+    parameters:
+      debug: {type: boolean, default: false}
+      executor: {type: executor}
+    executor: <<parameters.executor>>
+    steps:
+      - asdf/install:
+          debug: <<parameters.debug>>
+      - run:
+          name: Check
+          command: asdf --version
+
+workflows:
+  test-deploy:
+    jobs:
+      - test_install:
+          name: test_install, E:<<matrix.executor>>
+          debug: false
+          matrix:
+            parameters:
+              executor:
+                - docker_arm_cimg
+                - docker_x86_cimg
+                - machine_android
+                - machine_ubuntu_arm
+                - machine_ubuntu_x86
+                - macos_x86
+          filters: *filters
+
+      - orb-tools/pack:
+          requires:
+            - test_install
+          filters: *filters
+
+      - orb-tools/publish:
+          name: publish-dev
+          orb_name: rynkowsg/asdf
+          vcs_type: <<pipeline.project.type>>
+          pub_type: dev
+          requires:
+            - orb-tools/pack
+          context: circleci/orb-publishing-context
+          filters: *filters
+
+      - orb-tools/publish:
+          name: publish-prod
+          orb_name: rynkowsg/asdf
+          vcs_type: <<pipeline.project.type>>
+          pub_type: production
+          requires:
+            - publish-dev
+          context: circleci/orb-publishing-context
+          filters: *release-filters
