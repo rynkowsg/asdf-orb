@@ -1,5 +1,5 @@
 description: >
-  Installs asdf.
+  Installs ASDF.
 
 parameters:
   debug:
