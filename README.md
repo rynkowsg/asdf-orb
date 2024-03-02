@@ -59,9 +59,9 @@ Released under the [MIT license][orb-license].
 
 [badge-license]: https://img.shields.io/badge/license-MIT-lightgrey.svg
 [badge-orb-build-status]: https://circleci.com/gh/rynkowsg/asdf-orb.svg?style=shield "CircleCI Build Status"
-[badge-orb-version]: https://badges.circleci.com/orbs/rynkowsg/asdf-orb.svg
+[badge-orb-version]: https://badges.circleci.com/orbs/rynkowsg/asdf.svg
 [badge-orbs-discuss]: https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg
 [orb-license]: https://raw.githubusercontent.com/rynkowsg/asdf-orb/master/LICENSE
-[orb-page]: https://circleci.com/developer/orbs/orb/rynkowsg/asdf-orb
+[orb-page]: https://circleci.com/developer/orbs/orb/rynkowsg/asdf
 [orb-pipeline]: https://circleci.com/gh/rynkowsg/asdf-orb
 [orbs-discuss]: https://discuss.circleci.com/c/ecosystem/orbs
