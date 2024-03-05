@@ -1,9 +1,12 @@
 # JetBrains IDEs
-.idea
+/.idea/*
+!/.idea/codeStyles/
+!/.idea/dictionaries/
+!/.idea/runConfigurations/
+/*.iml
 
 # MacOS
 .DS_Store
 
 # CircleCI
-# orb.yml is "packed" from source, and not published directly from the repository.
 orb.yml
