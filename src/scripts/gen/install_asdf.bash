@@ -187,7 +187,10 @@ ci_post_asdf_install() {
   if [ "${CIRCLECI}" = "true" ]; then
     local install_dir="${1}"
     asdf_validate_install_dir "${install_dir}"
+    # needed for following jobs
     echo ". ${install_dir}/asdf.sh" >> "${BASH_ENV}"
+    # needed when we SSH to machine for debugging
+    echo ". ${install_dir}/asdf.sh" >> ~/.bashrc
   fi
 }
 
