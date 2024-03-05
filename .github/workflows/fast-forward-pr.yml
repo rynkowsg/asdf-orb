@@ -1,0 +1,13 @@
+name: Fast Forward PR
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  fast-forward:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fast Forward PR
+        # https://github.com/endre-spotlab/fast-forward-js-action/releases
+        uses: endre-spotlab/fast-forward-js-action@2.1
