@@ -1,9 +1,9 @@
 # [asdf-orb][orb-page]
 
-[![CircleCI Build Status][badge-orb-build-status]][orb-pipeline]
-[![CircleCI Orb Version][badge-orb-version]][orb-page]
-[![License][badge-license]][orb-license]
-[![CircleCI Community][badge-orbs-discuss]][orbs-discuss]
+[![CircleCI Build Status][ci-build-badge]][ci-build]
+[![CircleCI Orb Version][orb-version-badge]][orb-page]
+[![License][license-badge]][license]
+[![CircleCI Community][orbs-discuss-badge]][orbs-discuss]
 
 Use ASDF in your CircleCI pipelines.
 
@@ -26,6 +26,19 @@ The more specialized your Docker image, the longer it might take to fetch.
 With asdf-orb, you can start with a widely-used, or even a base image,
 and install everything you need using just one command.
 Plus, by caching this setup, you can speed up restoration for even quicker starts in the future.
+
+## Status
+
+The orb's got just the `install` command for now. But after you've got ASDF installed,
+adding plugins and tool installations can be easily accomplished from a regular `run` step.
+For examples, see:
+- [shellpack's CircleCI configuration](https://github.com/rynkowsg/shellpack/blob/main/.circleci/config.yml)
+- [clj-gr's CircleCI configuration](https://github.com/rynkowsg/clj-gr/blob/main/.circleci/config.yml)
+
+> [!WARNING]
+> This is **early alpha**. Keep this in mind that interface might change[^warning-alpha].
+
+[^warning-alpha]: That said, it's probably still better option to choose the update your repo later, if interface change, than whipping up your own asdf scripts.
 
 ## Quickstart
 
@@ -55,13 +68,13 @@ For full usage guidelines, see the [orb registry listing][orb-page].
 
 Copyright © 2024 Greg Rynkowski
 
-Released under the [MIT license][orb-license].
+Released under the [MIT license][license].
 
-[badge-license]: https://img.shields.io/badge/license-MIT-lightgrey.svg
-[badge-orb-build-status]: https://circleci.com/gh/rynkowsg/asdf-orb.svg?style=shield "CircleCI Build Status"
-[badge-orb-version]: https://badges.circleci.com/orbs/rynkowsg/asdf-orb.svg
-[badge-orbs-discuss]: https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg
-[orb-license]: https://raw.githubusercontent.com/rynkowsg/asdf-orb/master/LICENSE
-[orb-page]: https://circleci.com/developer/orbs/orb/rynkowsg/asdf-orb
-[orb-pipeline]: https://circleci.com/gh/rynkowsg/asdf-orb
+[ci-build-badge]: https://circleci.com/gh/rynkowsg/asdf-orb.svg?style=shield "CircleCI Build Status"
+[ci-build]: https://circleci.com/gh/rynkowsg/asdf-orb
+[license-badge]: https://img.shields.io/badge/license-MIT-lightgrey.svg
+[license]: https://raw.githubusercontent.com/rynkowsg/asdf-orb/master/LICENSE
+[orb-page]: https://circleci.com/developer/orbs/orb/rynkowsg/asdf
+[orb-version-badge]: https://badges.circleci.com/orbs/rynkowsg/asdf.svg
+[orbs-discuss-badge]: https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg
 [orbs-discuss]: https://discuss.circleci.com/c/ecosystem/orbs
