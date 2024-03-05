@@ -46,7 +46,7 @@ For examples, see:
 version: '2.1'
 
 orbs:
-  asdf: rynkowsg/asdf-orb@0.1.0
+  asdf: rynkowsg/asdf@0.1.1
 
 jobs:
   test:
