@@ -1,4 +1,4 @@
-# [asdf-orb][orb-page]
+# [`rynkowsg/asdf`][orb-page] orb
 
 [![CircleCI Build Status][ci-build-badge]][ci-build]
 [![CircleCI Orb Version][orb-version-badge]][orb-page]

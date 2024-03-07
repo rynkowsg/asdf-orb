@@ -10,6 +10,9 @@ orbs:
   orb-tools: circleci/orb-tools@12.1.0
 
 executors:
+  # Resource classes:
+  # https://circleci.com/product/features/resource-classes/
+  #
   # Docker:
   # https://circleci.com/docs/configuration-reference/#docker-execution-environment
   docker_x86_cimg:
