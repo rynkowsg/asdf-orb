@@ -8,42 +8,8 @@ orbs:
   # orb info: https://circleci.com/developer/orbs/orb/circleci/orb-tools
   # changelog: https://github.com/CircleCI-Public/orb-tools-orb/releases
   orb-tools: circleci/orb-tools@12.1.0
-
-executors:
-  # Resource classes:
-  # https://circleci.com/product/features/resource-classes/
-  #
-  # Docker:
-  # https://circleci.com/docs/configuration-reference/#docker-execution-environment
-  docker_x86_cimg:
-    docker: [{image: cimg/base:2023.12}]
-    resource_class: small
-  docker_arm_cimg:
-    docker: [{image: cimg/base:2023.12}]
-    resource_class: arm.medium
-  # Linux VM: Ubuntu
-  # https://circleci.com/docs/configuration-reference/#linuxvm-execution-environment
-  # Android images: https://circleci.com/developer/machine/image/android
-  # Ubuntu images: https://circleci.com/developer/machine/image/ubuntu-2204
-  machine_android:
-    machine: {image: android:2024.01.1}
-    resource_class: medium
-  machine_ubuntu_arm:
-    machine: {image: ubuntu-2204:2024.01.1}
-    resource_class: arm.medium
-  machine_ubuntu_x86:
-    machine: {image: ubuntu-2204:2024.01.1}
-    resource_class: medium
-  # MacOS
-  # https://circleci.com/docs/configuration-reference/#macos-execution-environment
-  # https://circleci.com/developer/machine/image/xcode
-  # From Jun 2024, M1 Medium will be available for free plan.
-  macos_x86:
-    macos: {xcode: 15.1.0}
-    resource_class: macos.x86.medium.gen2
-  # GPU:
-  # GPU and GPU Windows are not available in the Free plan.
-  # More: https://circleci.com/pricing/#comparison-table
+  # orb info: https://circleci.com/developer/orbs/orb/rynkowsg/rynkowsg
+  rynkowsg: rynkowsg/rynkowsg@0.2.1
 
 # Use this tag to ensure test jobs always run,
 # even though the downstream publish job will only run on release tags.
@@ -103,17 +69,17 @@ workflows:
   test-deploy:
     jobs:
       - test_install:
-          name: test_install, E:<<matrix.executor>>
+          name: "test_install; E:<<matrix.executor>>"
           debug: false
           matrix:
             parameters:
               executor:
-                - docker_arm_cimg
-                - docker_x86_cimg
-                - machine_android
-                - machine_ubuntu_arm
-                - machine_ubuntu_x86
-                - macos_x86
+                - rynkowsg/docker_arm_cimg_base
+                - rynkowsg/docker_x86_cimg_base
+                - rynkowsg/machine_x86_android
+                - rynkowsg/machine_arm_ubuntu2204
+                - rynkowsg/machine_x86_ubuntu2204
+                - rynkowsg/macos
           filters: *filters
 
       - orb-tools/pack:
