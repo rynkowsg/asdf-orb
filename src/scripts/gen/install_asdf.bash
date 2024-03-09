@@ -1,5 +1,5 @@
 #!/bin/bash
-# source of ././src/scripts/install_asdf.bash - BEGIN
+
 ###
 # Script installs asdf.
 #
@@ -11,13 +11,12 @@
 ## common library (shared)
 ########################################################################################################################
 
-# source of ././src/scripts/./internal/color.bash - BEGIN
+# source ./internal/color.bash # BEGIN
 GREEN=$(printf '\033[32m')
 YELLOW=$(printf '\033[33m')
 NC=$(printf '\033[0m')
-# source of ././src/scripts/./internal/color.bash - END
-
-# source of ././src/scripts/./internal/common.bash - BEGIN
+# source ./internal/color.bash # END
+# source ./internal/common.bash # BEGIN
 HOME="${HOME:-"$(eval echo ~)"}"
 
 # $1 - path
@@ -36,9 +35,10 @@ absolute_path() {
   cd "${normalized}" || exit 1
   pwd -P
 }
-# source of ././src/scripts/./internal/common.bash - END
+# source ./internal/common.bash # END
+# source ./internal/install_common.bash # BEGIN
+#!/usr/bin/env bash
 
-# source of ././src/scripts/./internal/install_common.bash - BEGIN
 # $1 - expected path
 path_in_path() {
   local dir="$1"
@@ -58,8 +58,7 @@ is_installed() {
     return 1 # false
   fi
 }
-# source of ././src/scripts/./internal/install_common.bash - END
-
+# source ./internal/install_common.bash # END
 
 ########################################################################################################################
 ## asdf-orb-specific
@@ -74,24 +73,26 @@ fi
 VERSION="${PARAM_VERSION:-${VERSION:-}}"
 INSTALL_DIR="$(normalized_path "${PARAM_INSTALL_DIR:-${INSTALL_DIR:-}}")"
 
-# source of ././src/scripts/./internal/asdf_orb_common_start.bash - BEGIN
+# source ./internal/asdf_orb_common_start.bash # BEGIN
 echo "BASH_ENV=${BASH_ENV:-}"
 echo "CIRCLECI=${CIRCLECI:-}"
 echo "DEBUG=${DEBUG:-}"
-# source of ././src/scripts/./internal/asdf_orb_common_start.bash - END
+# source ./internal/asdf_orb_common_start.bash # END
+# source ./internal/asdf_orb_common_input.bash # BEGIN
+#!/bin/bash
 
-# source of ././src/scripts/./internal/asdf_orb_common_input.bash - BEGIN
 ASDF_DIR="${PARAM_ASDF_DIR:-${ASDF_DIR:-~/.asdf}}"
 eval ASDF_DIR="${ASDF_DIR}"
 # eval to resolve possible ~
-# source of ././src/scripts/./internal/asdf_orb_common_input.bash - END
-
+# source ./internal/asdf_orb_common_input.bash # END
 
 ########################################################################################################################
 ## asdf-specific (shared)
 ########################################################################################################################
 
-# source of ././src/scripts/./internal/asdf_common.bash - BEGIN
+# source ./internal/asdf_common.bash # BEGIN
+#!/usr/bin/env bash
+
 NAME="asdf"
 CMD_NAME="${NAME}"
 
@@ -175,8 +176,7 @@ asdf_install() {
   git_clone_params+=(--depth 1)
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${ASDF_REPO}" "${install_dir_absolute}"
 }
-# source of ././src/scripts/./internal/asdf_common.bash - END
-
+# source ./internal/asdf_common.bash # END
 
 ########################################################################################################################
 ## asdf-orb-specific
@@ -219,4 +219,3 @@ if [[ -n "${BASH_SOURCE[@]}" && "${BASH_SOURCE[0]}" != "${0}" ]]; then
 else
   main "$@"
 fi
-# source of ././src/scripts/install_asdf.bash - END
