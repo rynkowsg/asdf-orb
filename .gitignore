@@ -11,3 +11,6 @@
 
 # CircleCI
 orb.yml
+
+# shellpack
+/.shellpack_deps

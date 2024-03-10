@@ -7,24 +7,67 @@
 #    DEBUG=1 VERSION=0.14.0 INSTALL_DIR=tmp-here ./src/scripts/gen/install_asdf.bash
 ###
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+SHELLPACK_DEPS_DIR="${ROOT_DIR}/.shellpack_deps"
+
 ########################################################################################################################
 ## common library (shared)
 ########################################################################################################################
 
-# source ./internal/color.bash # BEGIN
+# shellcheck source=lib/@github/rynkowsg/shell-gr2@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/color.bash
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/color.bash" # BEGIN
+#!/usr/bin/env bash
+
+#################################################
+#                    COLORS                     #
+#################################################
+
 GREEN=$(printf '\033[32m')
+RED=$(printf '\033[31m')
 YELLOW=$(printf '\033[33m')
 NC=$(printf '\033[0m')
-# source ./internal/color.bash # END
-# source ./internal/common.bash # BEGIN
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/color.bash" # END
+# shellcheck source=lib/@github/rynkowsg/shell-gr2@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/fs.bash
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/fs.bash" # normalized_path # BEGIN
+#!/usr/bin/env bash
+
 HOME="${HOME:-"$(eval echo ~)"}"
 
 # $1 - path
 normalized_path() {
-  local path="${1}"
+  local path=$1
+  # expand tilde (~) with eval
   eval path="${path}"
-  # this allows to resolve ~
-  echo "${path}"
+  # save prefix that otherwise we would loose in the next step
+  local prefix
+  if [[ "${path}" == /* ]]; then
+      prefix="/"
+  elif [[ "${path}" == ./* ]]; then
+      prefix="./"
+  fi
+  # remove all redundant /, . and ..
+  local old_IFS=$IFS
+  IFS='/'
+  local -a path_array
+  for segment in ${path}; do
+    case ${segment} in
+      ""|".")
+          ;;
+      "..")
+          # Remove the last segment for parent directory
+          [ ${#path_array[@]} -gt 0 ] && unset path_array[-1]
+          ;;
+      *)
+          path_array+=("${segment}")
+          ;;
+    esac
+  done
+  # compose path
+  local result
+  result="${prefix}$(IFS='/'; echo "${path_array[*]}")"
+  IFS=${old_IFS}
+  echo "${result}"
 }
 
 # $1 - path
@@ -35,30 +78,7 @@ absolute_path() {
   cd "${normalized}" || exit 1
   pwd -P
 }
-# source ./internal/common.bash # END
-# source ./internal/install_common.bash # BEGIN
-#!/usr/bin/env bash
-
-# $1 - expected path
-path_in_path() {
-  local dir="$1"
-  if echo "${PATH}" | tr ':' '\n' | grep -qx "${dir}"; then
-    return 0 # true
-  else
-    return 1 # false
-  fi
-}
-
-# $1 - command name
-is_installed() {
-  local command_name="$1"
-  if command -v "${command_name}" >/dev/null; then
-    return 0 # true
-  else
-    return 1 # false
-  fi
-}
-# source ./internal/install_common.bash # END
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/fs.bash" # normalized_path # END
 
 ########################################################################################################################
 ## asdf-orb-specific
@@ -92,6 +112,35 @@ eval ASDF_DIR="${ASDF_DIR}"
 
 # source ./internal/asdf_common.bash # BEGIN
 #!/usr/bin/env bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+SHELLPACK_DEPS_DIR="${ROOT_DIR}/.shellpack_deps"
+
+# shellcheck source=../../../.shellpack_deps/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/install_common.bash
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/install_common.bash" # is_installed # BEGIN
+#!/usr/bin/env bash
+
+# $1 - expected path
+path_in_path() {
+  local dir="$1"
+  if echo "${PATH}" | tr ':' '\n' | grep -qx "${dir}"; then
+    return 0 # true
+  else
+    return 1 # false
+  fi
+}
+
+# $1 - command name
+is_installed() {
+  local command_name="$1"
+  if command -v "${command_name}" >/dev/null; then
+    return 0 # true
+  else
+    return 1 # false
+  fi
+}
+# source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/install_common.bash" # is_installed # END
 
 NAME="asdf"
 CMD_NAME="${NAME}"

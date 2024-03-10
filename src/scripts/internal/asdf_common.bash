@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
+SHELLPACK_DEPS_DIR="${ROOT_DIR}/.shellpack_deps"
+
+# shellcheck source=../../../.shellpack_deps/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/install_common.bash
+source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/install_common.bash" # is_installed
+
 NAME="asdf"
 CMD_NAME="${NAME}"
 
