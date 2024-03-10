@@ -21,3 +21,7 @@ format-update-patches:
 	git reset HEAD~2
 	git add @bin/res/pre-format.patch @bin/res/post-format.patch
 	git commit -m "ci: Update patches"
+
+gen:
+	# with shellpack sha:d393d6a - https://github.com/rynkowsg/shellpack/commit/d393d6af64d85d48578136398ca6ee54217b2eb5
+	cd src/scripts && shellpack fetch install_asdf.bash && shellpack pack -i install_asdf.bash -o ./gen/install_asdf.bash
