@@ -7,18 +7,21 @@
 #    DEBUG=1 VERSION=0.14.0 INSTALL_DIR=tmp-here ./src/scripts/gen/install_asdf.bash
 ###
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_PATH="$([ -L "$0" ] && readlink "$0" || echo "$0")"
+SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_PATH}")" || exit 1; pwd -P)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
-SHELLPACK_DEPS_DIR="${ROOT_DIR}/.shellpack_deps"
+SHELLPACK_DEPS_DIR="${SHELLPACK_DEPS_DIR:-"${ROOT_DIR}/.shellpack_deps"}"
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b"}"
+export SHELL_GR_DIR
 
 ########################################################################################################################
 ## common library (shared)
 ########################################################################################################################
 
-# shellcheck source=lib/@github/rynkowsg/shell-gr2@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/color.bash
-source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/color.bash"
-# shellcheck source=lib/@github/rynkowsg/shell-gr2@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/fs.bash
-source "${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@2b0889e18b6f42623fb41ad2c80a59e4f5481ec2/lib/fs.bash" # normalized_path
+# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b/lib/color.bash
+source "${SHELL_GR_DIR}/lib/color.bash"
+# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b/lib/fs.bash
+source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path
 
 ########################################################################################################################
 ## asdf-orb-specific
@@ -33,13 +36,16 @@ fi
 VERSION="${PARAM_VERSION:-${VERSION:-}}"
 INSTALL_DIR="$(normalized_path "${PARAM_INSTALL_DIR:-${INSTALL_DIR:-}}")"
 
+# shellcheck source=src/scripts/internal/asdf_orb_common_start.bash
 source ./internal/asdf_orb_common_start.bash
+# shellcheck source=src/scripts/internal/asdf_orb_common_input.bash
 source ./internal/asdf_orb_common_input.bash
 
 ########################################################################################################################
 ## asdf-specific (shared)
 ########################################################################################################################
 
+# shellcheck source=src/scripts/internal/asdf_common.bash
 source ./internal/asdf_common.bash
 
 ########################################################################################################################
