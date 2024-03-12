@@ -1,7 +1,7 @@
 .PHONY: lint format-check format-apply format-update-patches
 
 lint:
-	bash @bin/lint.bash
+	\@bin/lint.bash
 
 format:
 	APPLY=0 \@bin/format.bash

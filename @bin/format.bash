@@ -34,7 +34,7 @@ main() {
   declare -A error_codes
   # workaround to fix unbound error
   error_codes["key1"]="value1"
-  unset error_codes["key1"]
+  unset 'error_codes["key1"]'
   # apply shfmt - process
   shfmt_params=()
   shfmt_params+=(--indent 2)
@@ -75,13 +75,13 @@ main() {
   fi
   # report errors
   local errors_count=${#error_codes[@]}
-  if [ $errors_count -ne 0 ]; then
+  if [ "${errors_count}" -ne 0 ]; then
     # Print error codes before exiting
     printf "\n%s\n" "Error codes per file:"
     for file in "${!error_codes[@]}"; do
       echo "$file: ${error_codes[$file]}"
     done
-    exit $errors_count
+    exit "${errors_count}"
   fi
 }
 
