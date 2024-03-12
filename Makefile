@@ -3,16 +3,17 @@
 lint:
 	bash @bin/lint.bash
 
-format-check:
-	bash @bin/format-check.bash
+format:
+	APPLY=0 \@bin/format.bash
 
 format-apply:
-	bash @bin/format-apply.bash
+	APPLY=1 \@bin/format.bash
 
 # Since formatting doesn't allow to ignore some parts, I apply patches before and after formatting to overcome this.
 # Here are commands to update these patches
 format-update-patches:
-	APPLY_PATCHES=0 make format-apply
+	rm -f @bin/res/pre-format.patch @bin/res/post-format.patch
+	APPLY_PATCHES=0 APPLY=1 bash @bin/format.bash
 	git commit -a --no-gpg-sign -m "patch"
 	git revert --no-commit HEAD
 	git commit -a --no-gpg-sign -m "patch revert"

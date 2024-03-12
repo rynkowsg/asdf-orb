@@ -58,9 +58,9 @@ ci_post_asdf_install() {
     local install_dir="${1}"
     asdf_validate_install_dir "${install_dir}"
     # needed for following jobs
-    echo ". ${install_dir}/asdf.sh" >> "${BASH_ENV}"
+    echo ". ${install_dir}/asdf.sh" >>"${BASH_ENV}"
     # needed when we SSH to machine for debugging
-    echo ". ${install_dir}/asdf.sh" >> ~/.bashrc
+    echo ". ${install_dir}/asdf.sh" >>~/.bashrc
   fi
 }
 
@@ -69,16 +69,16 @@ main() {
   version="${VERSION}"
   install_dir="$(asdf_determine_install_dir "${INSTALL_DIR}")"
   if ! asdf_is_installed; then
-      printf "${YELLOW}%s${NC}\n" "${NAME} is not yet installed."
-      asdf_install "${version}" "${install_dir}"
-      ci_post_asdf_install "${install_dir}"
-    elif ! asdf_is_version "${version}"; then
-      printf "${YELLOW}%s${NC}\n" "The installed version of ${NAME} ($(asdf_version)) is different then expected (${version})."
-      asdf_install "${version}" "${install_dir}"
-      ci_post_asdf_install "${install_dir}"
-    else
-      printf "${YELLOW}%s${NC}\n" "${NAME} is already installed in $(which "${CMD_NAME}")."
-    fi
+    printf "${YELLOW}%s${NC}\n" "${NAME} is not yet installed."
+    asdf_install "${version}" "${install_dir}"
+    ci_post_asdf_install "${install_dir}"
+  elif ! asdf_is_version "${version}"; then
+    printf "${YELLOW}%s${NC}\n" "The installed version of ${NAME} ($(asdf_version)) is different then expected (${version})."
+    asdf_install "${version}" "${install_dir}"
+    ci_post_asdf_install "${install_dir}"
+  else
+    printf "${YELLOW}%s${NC}\n" "${NAME} is already installed in $(which "${CMD_NAME}")."
+  fi
 }
 
 # shellcheck disable=SC2199

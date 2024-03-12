@@ -2,13 +2,13 @@
 
 set -uo pipefail
 
-find . -type f \( -name '*.bash' -o -name '*.sh' \) | \
-  grep -v -E '(.shellpack_deps|/gen/)' | \
-  while IFS= read -r file; do
+find . -type f \( -name '*.bash' -o -name '*.sh' \) \
+  | grep -v -E '(.shellpack_deps|/gen/)' \
+  | while IFS= read -r file; do
     echo "Processing file: $file"
     shellcheck \
-    --shell=bash \
-    --external-sources \
+      --shell=bash \
+      --external-sources \
       "${file}"
   done
 

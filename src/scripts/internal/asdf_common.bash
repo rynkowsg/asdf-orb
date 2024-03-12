@@ -52,9 +52,9 @@ asdf_version() {
 asdf_is_version() {
   local expected_ver="$1"
   if [ "$(asdf_version)" = "${expected_ver}" ]; then
-    return 0; # true
+    return 0 # true
   else
-    return 1; # false
+    return 1 # false
   fi
 }
 
@@ -87,7 +87,7 @@ asdf_install() {
   git_params+=(-c advice.detachedHead=false)
   local git_clone_params=()
   if [ -n "${version}" ]; then
-      git_clone_params+=(--branch "v${version}")
+    git_clone_params+=(--branch "v${version}")
   fi
   git_clone_params+=(--depth 1)
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${ASDF_REPO}" "${install_dir_absolute}"
