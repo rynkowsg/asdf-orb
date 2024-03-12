@@ -9,7 +9,7 @@ orbs:
   # changelog: https://github.com/CircleCI-Public/orb-tools-orb/releases
   orb-tools: circleci/orb-tools@12.1.0
   # orb info: https://circleci.com/developer/orbs/orb/rynkowsg/rynkowsg
-  rynkowsg: rynkowsg/rynkowsg@0.2.1
+  rynkowsg: rynkowsg/rynkowsg@0.3.0
 
 # Use this tag to ensure test jobs always run,
 # even though the downstream publish job will only run on release tags.
