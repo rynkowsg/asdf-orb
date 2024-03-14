@@ -4,10 +4,10 @@ lint:
 	\@bin/lint.bash
 
 format:
-	APPLY=0 \@bin/format.bash
+	APPLY_PATCHES=0 APPLY=0 \@bin/format.bash
 
 format-apply:
-	APPLY=1 \@bin/format.bash
+	APPLY_PATCHES=0 APPLY=1 \@bin/format.bash
 
 # Since formatting doesn't allow to ignore some parts, I apply patches before and after formatting to overcome this.
 # Here are commands to update these patches
@@ -25,4 +25,4 @@ format-update-patches:
 
 gen:
 	# with shellpack sha:e469eb6 - https://github.com/rynkowsg/shellpack/commit/02965b2cbbe4707c052f26eb90aac9308816c94b
-	cd src/scripts && shellpack fetch install_asdf.bash && shellpack pack -i install_asdf.bash -o ./gen/install_asdf.bash
+	shellpack fetch src/scripts/install_asdf.bash && shellpack pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash

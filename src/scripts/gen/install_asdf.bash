@@ -7,12 +7,12 @@
 #    DEBUG=1 VERSION=0.14.0 INSTALL_DIR=tmp-here ./src/scripts/gen/install_asdf.bash
 ###
 
-SCRIPT_PATH="$([ -L "$0" ] && readlink "$0" || echo "$0")"
-SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_PATH}")" || exit 1; pwd -P)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd)"
+# Path Initialization
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
+ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd -P || exit 1)"
+# Library Sourcing
 SHELLPACK_DEPS_DIR="${SHELLPACK_DEPS_DIR:-"${ROOT_DIR}/.shellpack_deps"}"
 SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b"}"
-export SHELL_GR_DIR
 
 ########################################################################################################################
 ## common library (shared)
@@ -97,26 +97,26 @@ VERSION="${PARAM_VERSION:-${VERSION:-}}"
 INSTALL_DIR="$(normalized_path "${PARAM_INSTALL_DIR:-${INSTALL_DIR:-}}")"
 
 # shellcheck source=src/scripts/internal/asdf_orb_common_start.bash
-# source ./internal/asdf_orb_common_start.bash # BEGIN
+# source "${SCRIPT_DIR}/internal/asdf_orb_common_start.bash" # BEGIN
 echo "BASH_ENV=${BASH_ENV:-}"
 echo "CIRCLECI=${CIRCLECI:-}"
 echo "DEBUG=${DEBUG:-}"
-# source ./internal/asdf_orb_common_start.bash # END
+# source "${SCRIPT_DIR}/internal/asdf_orb_common_start.bash" # END
 # shellcheck source=src/scripts/internal/asdf_orb_common_input.bash
-# source ./internal/asdf_orb_common_input.bash # BEGIN
+# source "${SCRIPT_DIR}/internal/asdf_orb_common_input.bash" # BEGIN
 #!/bin/bash
 
 ASDF_DIR="${PARAM_ASDF_DIR:-${ASDF_DIR:-~/.asdf}}"
 eval ASDF_DIR="${ASDF_DIR}"
 # eval to resolve possible ~
-# source ./internal/asdf_orb_common_input.bash # END
+# source "${SCRIPT_DIR}/internal/asdf_orb_common_input.bash" # END
 
 ########################################################################################################################
 ## asdf-specific (shared)
 ########################################################################################################################
 
 # shellcheck source=src/scripts/internal/asdf_common.bash
-# source ./internal/asdf_common.bash # BEGIN
+# source "${SCRIPT_DIR}/internal/asdf_common.bash" # BEGIN
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -233,7 +233,7 @@ asdf_install() {
   git_clone_params+=(--depth 1)
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${ASDF_REPO}" "${install_dir_absolute}"
 }
-# source ./internal/asdf_common.bash # END
+# source "${SCRIPT_DIR}/internal/asdf_common.bash" # END
 
 ########################################################################################################################
 ## asdf-orb-specific
