@@ -34,5 +34,5 @@ format-update-patches:
 	git commit -m "ci: Update patches"
 
 gen: deps_src
-	# with shellpack sha:e469eb6 - https://github.com/rynkowsg/shellpack/commit/02965b2cbbe4707c052f26eb90aac9308816c94b
+	# with shellpack https://github.com/rynkowsg/shellpack/commit/81b70c3da598456200d9c63fda779a04012ff256
 	shellpack pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash

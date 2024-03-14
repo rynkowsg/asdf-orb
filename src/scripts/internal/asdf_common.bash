@@ -3,10 +3,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../../.." && pwd)"
 SHELLPACK_DEPS_DIR="${SHELLPACK_DEPS_DIR:-"${ROOT_DIR}/.shellpack_deps"}"
-SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b"}"
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256"}"
 export SHELL_GR_DIR
 
-# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@02965b2cbbe4707c052f26eb90aac9308816c94b/lib/install_common.bash
+# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/install_common.bash
 source "${SHELL_GR_DIR}/lib/install_common.bash" # is_installed
 
 NAME="asdf"
