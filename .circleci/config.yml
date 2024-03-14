@@ -53,7 +53,7 @@ jobs:
             - ~/.asdf/installs
             - ~/.asdf/plugins
             - ~/.asdf/shims
-      - rynkowsg/install_shellpack: {version: dev}
+      - rynkowsg/install_shellpack: {version: "709b87e219cc0a45141e65b30fc60b7aac743b72"}
       - run: make format
       - run: make lint
 
