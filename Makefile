@@ -1,6 +1,9 @@
 .PHONY: lint format-check format-apply format-update-patches
 
-lint:
+deps_src:
+	shellpack fetch src/scripts/install_asdf.bash
+
+lint: deps_src
 	\@bin/lint.bash
 
 format:
@@ -23,6 +26,6 @@ format-update-patches:
 	git add @bin/res/pre-format.patch @bin/res/post-format.patch
 	git commit -m "ci: Update patches"
 
-gen:
+gen: deps_src
 	# with shellpack sha:e469eb6 - https://github.com/rynkowsg/shellpack/commit/02965b2cbbe4707c052f26eb90aac9308816c94b
-	shellpack fetch src/scripts/install_asdf.bash && shellpack pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash
+	shellpack pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash

@@ -54,11 +54,6 @@ jobs:
             - ~/.asdf/plugins
             - ~/.asdf/shims
       - rynkowsg/install_shellpack: {version: dev}
-      - run:
-          name: Run shellpack fetch
-          command: |
-            cd ./src/scripts
-            shellpack fetch -d -i ./install_asdf.bash
       - run: make format
       - run: make lint
 
