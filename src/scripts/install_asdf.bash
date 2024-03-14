@@ -11,16 +11,10 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd -P || exit 1)"
 # Library Sourcing
-SHELLPACK_DEPS_DIR="${SHELLPACK_DEPS_DIR:-"${ROOT_DIR}/.shellpack_deps"}"
-SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256"}"
-
-########################################################################################################################
-## common library (shared)
-########################################################################################################################
-
-# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/color.bash
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256"}"
+# shellcheck source=.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/color.bash
 source "${SHELL_GR_DIR}/lib/color.bash"
-# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/fs.bash
 source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path
 
 ########################################################################################################################
