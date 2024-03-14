@@ -24,8 +24,8 @@ source "${SHELL_GR_DIR}/lib/tool/format.bash" # format_with_env
 main() {
   local format_cmd_type=$1
   local error=0
-  find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) | grep -v -E '(.github_deps|/gen/)' | format_with_env "${format_cmd_type}" bash || ((error += $?))
-  find "${ROOT_DIR}" -type f -name '*.bats' | format_with_env "${format_cmd_type}" bats || ((error += $?))
+  format_with_env "${format_cmd_type}" bash < <(find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) | grep -v -E '(.github_deps|/gen/)') || ((error += $?))
+  format_with_env "${format_cmd_type}" bats < <(find "${ROOT_DIR}" -type f -name '*.bats') || ((error += $?))
   if ((error > 0)); then
     exit "$error"
   fi

@@ -22,8 +22,8 @@ source "${SHELL_GR_DIR}/lib/tool/lint.bash" # lint
 
 main() {
   local error=0
-  find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) | grep -v -E '(.github_deps|/gen/)' | lint bash || ((error += $?))
-  find "${ROOT_DIR}" -type f -name '*.bats' | lint bats || ((error += $?))
+  lint bash < <(find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) | grep -v -E '(.github_deps|/gen/)') || ((error += $?))
+  lint bats < <(find "${ROOT_DIR}" -type f -name '*.bats') || ((error += $?))
   if ((error > 0)); then
     exit "$error"
   fi
