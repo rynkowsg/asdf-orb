@@ -1,0 +1,35 @@
+description: >
+  Installs ASDF.
+
+parameters:
+  # common
+  debug:
+    type: boolean
+    default: false
+    description: "Flag to run the script in debug mode."
+  name_displayed:
+    type: string
+    default: "asdf/install_asdf"
+    description: |
+      The step name displayed in pipeline preview.
+  # specific
+  install_dir:
+    type: string
+    default: ""
+    description: >
+      Destination where to install the tool.
+      ASDF_DIR is set to that value. By defaults takes ~/.asdf.
+  version:
+    type: string
+    default: "0.14.0"
+    description:
+      Requested version. If not provided it install the latest.
+
+steps:
+  - run:
+      environment:
+        PARAM_DEBUG: <<parameters.debug>>
+        PARAM_INSTALL_DIR: <<parameters.install_dir>>
+        PARAM_VERSION: <<parameters.version>>
+      name: <<parameters.name_displayed>>
+      command: <<include(scripts/gen/install_asdf.bash)>>

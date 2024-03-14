@@ -11,16 +11,20 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd -P || exit 1)"
 # Library Sourcing
-SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256"}"
-# shellcheck source=.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/color.bash
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f"}"
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/color.bash
 source "${SHELL_GR_DIR}/lib/color.bash"
-# shellcheck source=.github_deps/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/fs.bash
 source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/install/asdf.bash
+source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/install/asdf.bash
+source "${SHELL_GR_DIR}/lib/install/asdf_circleci.bash" # ASDF_CIRCLECI_asdf_install
 
-########################################################################################################################
-## asdf-orb-specific
-########################################################################################################################
-# in this section I we can convert orb input to the script intput
+# shellcheck source=src/scripts/internal/asdf_orb_common_start.bash
+source "${SCRIPT_DIR}/internal/asdf_orb_common_start.bash"
+# shellcheck source=src/scripts/internal/asdf_orb_common_input.bash
+source "${SCRIPT_DIR}/internal/asdf_orb_common_input.bash"
 
 DEBUG=${PARAM_DEBUG:-${DEBUG:-0}}
 if [ "${DEBUG}" = 1 ]; then
@@ -30,49 +34,8 @@ fi
 VERSION="${PARAM_VERSION:-${VERSION:-}}"
 INSTALL_DIR="$(normalized_path "${PARAM_INSTALL_DIR:-${INSTALL_DIR:-}}")"
 
-# shellcheck source=src/scripts/internal/asdf_orb_common_start.bash
-source "${SCRIPT_DIR}/internal/asdf_orb_common_start.bash"
-# shellcheck source=src/scripts/internal/asdf_orb_common_input.bash
-source "${SCRIPT_DIR}/internal/asdf_orb_common_input.bash"
-
-########################################################################################################################
-## asdf-specific (shared)
-########################################################################################################################
-
-# shellcheck source=src/scripts/internal/asdf_common.bash
-source "${SCRIPT_DIR}/internal/asdf_common.bash"
-
-########################################################################################################################
-## asdf-orb-specific
-########################################################################################################################
-
-# $1 - install_dir
-ci_post_asdf_install() {
-  if [ "${CIRCLECI}" = "true" ]; then
-    local install_dir="${1}"
-    asdf_validate_install_dir "${install_dir}"
-    # needed for following jobs
-    echo ". ${install_dir}/asdf.sh" >>"${BASH_ENV}"
-    # needed when we SSH to machine for debugging
-    echo ". ${install_dir}/asdf.sh" >>~/.bashrc
-  fi
-}
-
 main() {
-  local version install_dir
-  version="${VERSION}"
-  install_dir="$(asdf_determine_install_dir "${INSTALL_DIR}")"
-  if ! asdf_is_installed; then
-    printf "${YELLOW}%s${NC}\n" "${NAME} is not yet installed."
-    asdf_install "${version}" "${install_dir}"
-    ci_post_asdf_install "${install_dir}"
-  elif ! asdf_is_version "${version}"; then
-    printf "${YELLOW}%s${NC}\n" "The installed version of ${NAME} ($(asdf_version)) is different then expected (${version})."
-    asdf_install "${version}" "${install_dir}"
-    ci_post_asdf_install "${install_dir}"
-  else
-    printf "${YELLOW}%s${NC}\n" "${NAME} is already installed in $(which "${CMD_NAME}")."
-  fi
+  ASDF_CIRCLECI_asdf_install "${VERSION}" "${INSTALL_DIR}"
 }
 
 # shellcheck disable=SC2199
