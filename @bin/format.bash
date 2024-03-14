@@ -1,88 +1,35 @@
 #!/usr/bin/env bash
 
-set -uo pipefail
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+#
+# Validates/corrects format
+#
+# Example:
+#
+#  - check:  @bin/format.bash check
+#  - apply:  @bin/format.bash apply
+#
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-# detect ROOT_DIR - BEGIN
-SCRIPT_PATH="$([ -L "$0" ] && readlink "$0" || echo "$0")"
-SCRIPT_DIR="$(cd "$(dirname "${SCRIPT_PATH}")" && pwd -P || exit 1)"
+# Bash Strict Mode Settings
+set -euo pipefail
+# Path Initialization
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd -P || exit 1)"
-# detect ROOT_DIR - END
-
-# inputs
-DEBUG=${DEBUG:-0}
-APPLY_PATCHES=${APPLY_PATCHES:-1}
-APPLY=${APPLY:-0}
-
-if [ "${DEBUG}" = 1 ]; then
-  echo "SCRIPT_DIR: ${SCRIPT_DIR}"
-  echo "ROOT_DIR: ${ROOT_DIR}"
-  echo "APPLY_PATCHES: ${APPLY_PATCHES}"
-  echo "APPLY: ${APPLY}"
-fi
+# Library Sourcing
+SHELLPACK_DEPS_DIR="${SHELLPACK_DEPS_DIR:-"${ROOT_DIR}/.shellpack_deps"}"
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${SHELLPACK_DEPS_DIR}/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256"}"
+# shellcheck source=.shellpack_deps/@github/rynkowsg/shell-gr@81b70c3da598456200d9c63fda779a04012ff256/lib/tool/format.bash
+source "${SHELL_GR_DIR}/lib/tool/format.bash" # format_with_env
 
 main() {
-  # apply patches (shfmt workaround)
-  if [ "${APPLY_PATCHES}" = 1 ]; then
-    git apply "${SCRIPT_DIR}/res/pre-format.patch"
-    res=$?
-    if [ $res -ne 0 ]; then
-      echo "Failed to apply pre-format.patch"
-      exit $res
-    fi
-  fi
-  # apply shfmt - define error_codes
-  declare -A error_codes
-  # workaround to fix unbound error
-  error_codes["key1"]="value1"
-  unset 'error_codes["key1"]'
-  # apply shfmt - process
-  shfmt_params=()
-  shfmt_params+=(--indent 2)
-  shfmt_params+=(--case-indent)
-  shfmt_params+=(--binary-next-line)
-  if [ "${APPLY}" = 1 ]; then
-    shfmt_params+=(--write)
-  else
-    shfmt_params+=(--diff)
-  fi
-  while IFS= read -r file; do
-    echo "Processing file: $file"
-    shfmt --language-dialect bash "${shfmt_params[@]}" "${file}"
-    res=$?
-    if [ $res -ne 0 ]; then
-      error_codes["$file"]=$res
-    fi
-  done < <(
-    find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) \
-      | grep -v -E '(.shellpack_deps|/gen/)'
-  )
-  while IFS= read -r file; do
-    echo "Processing file: $file"
-    shfmt --language-dialect bats "${shfmt_params[@]}" "${file}"
-    res=$?
-    if [ $res -ne 0 ]; then
-      error_codes["${file}"]=$res
-    fi
-  done < <(find "${ROOT_DIR}" -type f -name '*.bats')
-  # revert patches (shfmt workaround)
-  if [ "${APPLY_PATCHES}" = 1 ]; then
-    git apply "${SCRIPT_DIR}/res/post-format.patch"
-    res=$?
-    if [ $res -ne 0 ]; then
-      echo "Failed to apply pre-format.patch"
-      exit $res
-    fi
-  fi
-  # report errors
-  local errors_count=${#error_codes[@]}
-  if [ "${errors_count}" -ne 0 ]; then
-    # Print error codes before exiting
-    printf "\n%s\n" "Error codes per file:"
-    for file in "${!error_codes[@]}"; do
-      echo "$file: ${error_codes[$file]}"
-    done
-    exit "${errors_count}"
+  local format_cmd_type=$1
+  local error=0
+  find "${ROOT_DIR}" -type f \( -name '*.bash' -o -name '*.sh' \) | grep -v -E '(.shellpack_deps|/gen/)' | format_with_env "${format_cmd_type}" bash || ((error += $?))
+  find "${ROOT_DIR}" -type f -name '*.bats' | format_with_env "${format_cmd_type}" bats || ((error += $?))
+  if ((error > 0)); then
+    exit "$error"
   fi
 }
 
-main
+main "$@"
