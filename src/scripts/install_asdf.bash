@@ -11,14 +11,14 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd -P || exit 1)"
 # Library Sourcing
-SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f"}"
-# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/color.bash
+SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.1.0"}"
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/color.bash
 source "${SHELL_GR_DIR}/lib/color.bash"
-# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/fs.bash
 source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path
-# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/install/asdf.bash
 source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir
-# shellcheck source=.github_deps/rynkowsg/shell-gr@e0642bd1a0b42b9bbd5b83de9f2d9eebf2edf80f/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/install/asdf.bash
 source "${SHELL_GR_DIR}/lib/install/asdf_circleci.bash" # ASDF_CIRCLECI_asdf_install
 
 # shellcheck source=src/scripts/internal/asdf_orb_common_start.bash
