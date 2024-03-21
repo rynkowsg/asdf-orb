@@ -7,12 +7,18 @@
 #    DEBUG=1 VERSION=0.14.0 INSTALL_DIR=tmp-here ./src/scripts/gen/install_asdf.bash
 ###
 
+# Bash Strict Mode Settings
+set -euo pipefail
 # Path Initialization
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
-ROOT_DIR="$(cd "${SCRIPT_DIR}/../.." && pwd -P || exit 1)"
+if [ -z "${SHELL_GR_DIR:-}" ]; then
+  SCRIPT_PATH_1="${BASH_SOURCE[0]:-$0}"
+  SCRIPT_PATH="$([[ ! "${SCRIPT_PATH_1}" =~ /bash$ ]] && readlink -f "${SCRIPT_PATH_1}" || echo "")"
+  SCRIPT_DIR="$([ -n "${SCRIPT_PATH}" ] && (cd "$(dirname "${SCRIPT_PATH}")" && pwd -P) || echo "")"
+  ROOT_DIR="$([ -n "${SCRIPT_DIR}" ] && (cd "${SCRIPT_DIR}/../.." && pwd -P) || echo "/tmp")"
+  SHELL_GR_DIR="${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.2.0"
+fi
 # Library Sourcing
-SHELL_GR_DIR="${SHELL_GR_DIR:-"${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.1.0"}"
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/color.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/color.bash
 # source "${SHELL_GR_DIR}/lib/color.bash" # BEGIN
 #!/usr/bin/env bash
 
@@ -26,7 +32,7 @@ RED=$(printf '\033[31m')
 YELLOW=$(printf '\033[33m')
 NC=$(printf '\033[0m')
 # source "${SHELL_GR_DIR}/lib/color.bash" # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/fs.bash
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # BEGIN
 #!/usr/bin/env bash
 
@@ -78,15 +84,21 @@ absolute_path() {
   pwd -P
 }
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # BEGIN
 #!/usr/bin/env bash
 
 # Path Initialization
-_GR_INSTALL_ASDF__SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
-_GR_INSTALL_ASDF__ROOT_DIR="$(cd "${_GR_INSTALL_ASDF__SCRIPT_DIR}/../.." && pwd -P || exit 1)"
+if [ -n "${SHELL_GR_DIR}" ]; then
+  _SHELL_GR_DIR="${SHELL_GR_DIR}"
+else
+  _SCRIPT_PATH_1="${BASH_SOURCE[0]:-$0}"
+  _SCRIPT_PATH="$([[ ! "${_SCRIPT_PATH_1}" =~ /bash$ ]] && readlink -f "${_SCRIPT_PATH_1}" || exit 1)"
+  _SCRIPT_DIR="$(cd "$(dirname "${_SCRIPT_PATH}")" && pwd -P || exit 1)"
+  _ROOT_DIR="$(cd "${_SCRIPT_DIR}/../,," && pwd -P || exit 1)"
+  _SHELL_GR_DIR="${_ROOT_DIR}"
+fi
 # Library Sourcing
-_SHELL_GR_DIR="${SHELL_GR_DIR:-"${_GR_INSTALL_ASDF__ROOT_DIR}"}"
 # source "${_SHELL_GR_DIR}/lib/install_common.bash" # is_installed # BEGIN
 #!/usr/bin/env bash
 
@@ -194,15 +206,21 @@ asdf_install() {
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${_ASDF_REPO}" "${install_dir_absolute}"
 }
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.1.0/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf_circleci.bash" # ASDF_CIRCLECI_asdf_install # BEGIN
 #!/usr/bin/env bash
 
 # Path Initialization
-_GR_INSTALL_ASDF_CIRCLECI__SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P || exit 1)"
-_GR_INSTALL_ASDF_CIRCLECI__ROOT_DIR="$(cd "${_GR_INSTALL_ASDF_CIRCLECI__SCRIPT_DIR}/../.." && pwd -P || exit 1)"
+if [ -n "${SHELL_GR_DIR}" ]; then
+  _SHELL_GR_DIR="${SHELL_GR_DIR}"
+else
+  _SCRIPT_PATH_1="${BASH_SOURCE[0]:-$0}"
+  _SCRIPT_PATH="$([[ ! "${_SCRIPT_PATH_1}" =~ /bash$ ]] && readlink -f "${_SCRIPT_PATH_1}" || exit 1)"
+  _SCRIPT_DIR="$(cd "$(dirname "${_SCRIPT_PATH}")" && pwd -P || exit 1)"
+  _ROOT_DIR="$(cd "${_SCRIPT_DIR}/.." && pwd -P || exit 1)"
+  _SHELL_GR_DIR="${_ROOT_DIR}"
+fi
 # Library Sourcing
-_SHELL_GR_DIR="${SHELL_GR_DIR:-"${_GR_INSTALL_ASDF_CIRCLECI__ROOT_DIR}"}"
 # source "${_SHELL_GR_DIR}/lib/color.bash"        # YELLOW, NC # SKIPPED
 # source "${_SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_determine_install_dir, asdf_validate_install_dir, asdf_is_installed, asdf_is_version, asdf_version, _ASDF_NAME # SKIPPED
 # source "${_SHELL_GR_DIR}/lib/text.bash"         # append_if_not_exists # BEGIN
@@ -278,11 +296,8 @@ main() {
   ASDF_CIRCLECI_asdf_install "${VERSION}" "${INSTALL_DIR}"
 }
 
-# shellcheck disable=SC2199
-# to disable warning about concatenation of BASH_SOURCE[@]
-# It is not a problem. This part pf condition is only to prevent `unbound variable` error.
-if [[ -n "${BASH_SOURCE[@]}" && "${BASH_SOURCE[0]}" != "${0}" ]]; then
-  [[ -n "${BASH_SOURCE[0]}" ]] && printf "%s\n" "Loaded: ${BASH_SOURCE[0]}"
-else
+if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]] || [[ "${CIRCLECI}" == "true" ]]; then
   main "$@"
+else
+  printf "%s\n" "Loaded: ${BASH_SOURCE[0]:-}"
 fi
