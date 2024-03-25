@@ -15,10 +15,10 @@ if [ -z "${SHELL_GR_DIR:-}" ]; then
   SCRIPT_PATH="$([[ ! "${SCRIPT_PATH_1}" =~ /bash$ ]] && readlink -f "${SCRIPT_PATH_1}" || echo "")"
   SCRIPT_DIR="$([ -n "${SCRIPT_PATH}" ] && (cd "$(dirname "${SCRIPT_PATH}")" && pwd -P) || echo "")"
   ROOT_DIR="$([ -n "${SCRIPT_DIR}" ] && (cd "${SCRIPT_DIR}/../.." && pwd -P) || echo "/tmp")"
-  SHELL_GR_DIR="${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.2.0"
+  SHELL_GR_DIR="${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@e219c1e"
 fi
 # Library Sourcing
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/color.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e219c1e/lib/color.bash
 # source "${SHELL_GR_DIR}/lib/color.bash" # BEGIN
 #!/usr/bin/env bash
 
@@ -32,7 +32,7 @@ RED=$(printf '\033[31m')
 YELLOW=$(printf '\033[33m')
 NC=$(printf '\033[0m')
 # source "${SHELL_GR_DIR}/lib/color.bash" # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e219c1e/lib/fs.bash
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # BEGIN
 #!/usr/bin/env bash
 
@@ -84,7 +84,7 @@ absolute_path() {
   pwd -P
 }
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e219c1e/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # BEGIN
 #!/usr/bin/env bash
 
@@ -206,7 +206,7 @@ asdf_install() {
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${_ASDF_REPO}" "${install_dir_absolute}"
 }
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.0/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@e219c1e/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf_circleci.bash" # ASDF_CIRCLECI_asdf_install # BEGIN
 #!/usr/bin/env bash
 
@@ -229,7 +229,8 @@ fi
 append_if_not_exists() {
   local -r line="$1"
   local -r file="$2"
-  if ! grep -qxF -- "${line}" "${file}"; then
+  # if file does not exist or line does not exist in file
+  if [ ! -f "${file}" ] || ! grep -qxF -- "${line}" "${file}"; then
     echo "${line}" >>"${file}"
   fi
 }
