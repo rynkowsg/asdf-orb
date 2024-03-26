@@ -15,10 +15,10 @@ if [ -z "${SHELL_GR_DIR:-}" ]; then
   SCRIPT_PATH="$([[ ! "${SCRIPT_PATH_1}" =~ /bash$ ]] && readlink -f "${SCRIPT_PATH_1}" || echo "")"
   SCRIPT_DIR="$([ -n "${SCRIPT_PATH}" ] && (cd "$(dirname "${SCRIPT_PATH}")" && pwd -P) || echo "")"
   ROOT_DIR="$([ -n "${SCRIPT_DIR}" ] && (cd "${SCRIPT_DIR}/../.." && pwd -P) || echo "/tmp")"
-  SHELL_GR_DIR="${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.2.1"
+  SHELL_GR_DIR="${ROOT_DIR}/.github_deps/rynkowsg/shell-gr@v0.2.2"
 fi
 # Library Sourcing
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.1/lib/color.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.2/lib/color.bash
 # source "${SHELL_GR_DIR}/lib/color.bash" # BEGIN
 #!/usr/bin/env bash
 
@@ -32,7 +32,7 @@ RED=$(printf '\033[31m')
 YELLOW=$(printf '\033[33m')
 NC=$(printf '\033[0m')
 # source "${SHELL_GR_DIR}/lib/color.bash" # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.1/lib/fs.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.2/lib/fs.bash
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # BEGIN
 #!/usr/bin/env bash
 
@@ -69,8 +69,8 @@ normalized_path() {
     esac
   done
   # compose path
-  local result
-  result="${prefix}$(IFS='/' && echo "${path_array[*]}")"
+  read -r joined < <(echo "${path_array[*]}")
+  local -r result="${prefix}${joined}"
   IFS=${old_IFS}
   echo "${result}"
 }
@@ -84,7 +84,7 @@ absolute_path() {
   pwd -P
 }
 # source "${SHELL_GR_DIR}/lib/fs.bash" # normalized_path # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.1/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.2/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # BEGIN
 #!/usr/bin/env bash
 
@@ -206,7 +206,7 @@ asdf_install() {
   git "${git_params[@]}" clone "${git_clone_params[@]}" "${_ASDF_REPO}" "${install_dir_absolute}"
 }
 # source "${SHELL_GR_DIR}/lib/install/asdf.bash" # asdf_install, asdf_is_installed, asdf_determine_install_dir # END
-# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.1/lib/install/asdf.bash
+# shellcheck source=.github_deps/rynkowsg/shell-gr@v0.2.2/lib/install/asdf.bash
 # source "${SHELL_GR_DIR}/lib/install/asdf_circleci.bash" # ASDF_CIRCLECI_asdf_install # BEGIN
 #!/usr/bin/env bash
 
