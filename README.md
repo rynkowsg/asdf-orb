@@ -64,6 +64,13 @@ workflows:
 
 For full usage guidelines, see the [orb registry listing][orb-page].
 
+## Check out also
+
+| Name                                                            | Description                                                  |
+|-----------------------------------------------------------------|--------------------------------------------------------------|
+| [`rynkowsg/asdf`](https://github.com/rynkowsg/asdf-orb)         | Orb providing support for ASDF                               |
+| [`rynkowsg/rynkowsg`](https://github.com/rynkowsg/rynkowsg-orb) | Orb with no particular theme, used primarily for prototyping |
+
 ## License
 
 Copyright © 2024 Greg Rynkowski
