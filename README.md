@@ -32,7 +32,7 @@ Plus, by caching this setup, you can speed up restoration for even quicker start
 The orb's got just the `install` command for now. But after you've got ASDF installed,
 adding plugins and tool installations can be easily accomplished from a regular `run` step.
 For examples, see:
-- [shellpack's CircleCI configuration](https://github.com/rynkowsg/shellpack/blob/main/.circleci/config.yml)
+- [sosh's CircleCI configuration](https://github.com/rynkowsg/sosh/blob/main/.circleci/config.yml)
 - [clj-gr's CircleCI configuration](https://github.com/rynkowsg/clj-gr/blob/main/.circleci/config.yml)
 
 > [!WARNING]

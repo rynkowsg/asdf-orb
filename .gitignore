@@ -14,5 +14,5 @@
 # CircleCI
 orb.yml
 
-# shellpack
+# sosh
 /.github_deps

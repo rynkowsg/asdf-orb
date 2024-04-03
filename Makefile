@@ -1,13 +1,13 @@
 .PHONY: lint format-check format format-update-patches
 
 deps_format: @bin/format.bash
-	shellpack fetch @bin/format.bash
+	sosh fetch @bin/format.bash
 
 deps_lint: @bin/lint.bash
-	shellpack fetch @bin/lint.bash
+	sosh fetch @bin/lint.bash
 
 deps_src:
-	shellpack fetch src/scripts/install_asdf.bash
+	sosh fetch src/scripts/install_asdf.bash
 
 format-check: deps_format
 	\@bin/format.bash check
@@ -34,5 +34,4 @@ format-update-patches:
 	git commit -m "ci: Update patches"
 
 gen: deps_src
-	# with shellpack https://github.com/rynkowsg/shellpack/commits/v0.1.2
-	shellpack pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash
+	sosh pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash
