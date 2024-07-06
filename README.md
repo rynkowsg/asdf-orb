@@ -64,12 +64,13 @@ workflows:
 
 For full usage guidelines, see the [orb registry listing][orb-page].
 
-## Check out also
+## `rynkowsg/` orb family
 
-| Name                                                            | Description                                                  |
-|-----------------------------------------------------------------|--------------------------------------------------------------|
-| [`rynkowsg/asdf`](https://github.com/rynkowsg/asdf-orb)         | Orb providing support for ASDF                               |
-| [`rynkowsg/rynkowsg`](https://github.com/rynkowsg/rynkowsg-orb) | Orb with no particular theme, used primarily for prototyping |
+| Name                                                            | Description                                                                                       |
+|-----------------------------------------------------------------|---------------------------------------------------------------------------------------------------|
+| [`rynkowsg/asdf`](https://github.com/rynkowsg/asdf-orb)         | Orb providing support for ASDF                                                                    |
+| [`rynkowsg/checkout`](https://github.com/rynkowsg/checkout-orb) | Advanced checkout with support of LFS, submodules, custom SSH identities, shallow clones and more |
+| [`rynkowsg/rynkowsg`](https://github.com/rynkowsg/rynkowsg-orb) | Orb with no particular theme, used primarily for prototyping                                      |
 
 ## License
 
