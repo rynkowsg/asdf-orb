@@ -1,0 +1,17 @@
+description: >
+  Saves ASDF cache.
+
+parameters:
+  cache_prefix:
+    default: v1
+    description: Used to form part of the cache key
+    type: string
+
+steps:
+  - save_cache:
+      key: asdf-<< parameters.cache_prefix>>-{{ arch }}-{{ checksum "/tmp/asdf_cache_seed" }}
+      name: asdf/cache_save
+      paths:
+        - ~/.asdf/installs
+        - ~/.asdf/plugins
+        - ~/.asdf/shims

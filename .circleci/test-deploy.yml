@@ -32,9 +32,20 @@ jobs:
     executor: <<parameters.executor>>
     steps:
       - asdf/install_asdf
+      - asdf/cache_restore
+      - run:
+          name: install tools
+          command: |
+            asdf plugin add jet https://github.com/rynkowsg/asdf-jet.git
+            asdf install jet 0.7.27
+            asdf global jet 0.7.27
+      - asdf/cache_save
       - run:
           name: Check
-          command: asdf --version
+          command: |
+            set -x
+            asdf --version
+            jet --version
 
 workflows:
   test-deploy:

@@ -1,0 +1,25 @@
+description: >
+  Restore ASDF cache.
+
+parameters:
+  cache_prefix:
+    default: v1
+    description: Used to form part of the cache key
+    type: string
+  find_args:
+    default: . -name ".tool-versions" -o -name ".plugin-versions"
+    description: |
+        Use this to customize how the find command is used to look for relevant
+        file changes.
+    type: string
+
+steps:
+  - run:
+      name: asdf/cache_gen_key
+      environment:
+        CACHE_SEED: /tmp/asdf_cache_seed
+        PARAM_FIND_ARGS: << parameters.find_args >>
+      command: <<include(scripts/gen/cache_gen_key.bash)>>
+  - restore_cache:
+      name: asdf/cache_restore
+      key: asdf-<< parameters.cache_prefix>>-{{ arch }}-{{ checksum "/tmp/asdf_cache_seed" }}

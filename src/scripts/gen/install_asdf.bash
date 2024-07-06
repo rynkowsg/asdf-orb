@@ -302,5 +302,5 @@ main() {
 if [[ "${BASH_SOURCE[0]:-}" == "${0}" ]] || [[ "${CIRCLECI}" == "true" ]]; then
   main "$@"
 else
-  printf "%s\n" "Loaded: ${BASH_SOURCE[0]:-}"
+  printf "%s\n" "Loaded: ${BASH_SOURCE[0]:-}" >&2
 fi

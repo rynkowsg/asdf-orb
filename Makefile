@@ -7,6 +7,7 @@ deps_lint: @bin/lint.bash
 	sosh fetch @bin/lint.bash
 
 deps_src:
+	sosh fetch src/scripts/cache_gen_key.bash
 	sosh fetch src/scripts/install_asdf.bash
 
 format-check: deps_format
@@ -34,4 +35,5 @@ format-update-patches:
 	git commit -m "ci: Update patches"
 
 gen: deps_src
+	sosh pack -i src/scripts/cache_gen_key.bash -o src/scripts/gen/cache_gen_key.bash
 	sosh pack -i src/scripts/install_asdf.bash -o src/scripts/gen/install_asdf.bash
