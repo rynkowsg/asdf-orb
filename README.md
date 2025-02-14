@@ -38,7 +38,7 @@ For examples, see:
 > [!WARNING]
 > This is **early alpha**. Keep this in mind that interface might change[^warning-alpha].
 
-[^warning-alpha]: That said, it's probably still better option to choose the update your repo later, if interface change, than whipping up your own asdf scripts.
+[^warning-alpha]: That said, even if breaking changes are possible, it's probably better to use it and update your repository as needed rather than building your own scripts.
 
 ## Quickstart
 
