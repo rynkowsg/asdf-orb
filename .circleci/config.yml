@@ -64,7 +64,7 @@ jobs:
             - ~/.asdf/installs
             - ~/.asdf/plugins
             - ~/.asdf/shims
-      - rynkowsg/install_sosh: {version: "v0.2.0"}
+      - rynkowsg/install_sosh: {version: "v0.2.1"}
       - run: make format-shell/check
       - run: make lint-shell/check
 
