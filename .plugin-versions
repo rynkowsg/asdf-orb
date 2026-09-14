@@ -1,0 +1,5 @@
+# plugin-name        git-url                                      git-ref (hash, tag, or branch)
+babashka             https://github.com/fredZen/asdf-babashka.git  37fc5db
+java                 https://github.com/halcyon/asdf-java.git      bf6f7de
+shellcheck           https://github.com/luizm/asdf-shellcheck.git  8b954a9
+shfmt                https://github.com/luizm/asdf-shfmt.git       a42c5ff
